@@ -1,4 +1,4 @@
-package main
+package pool
 
 import (
 	"strings"
@@ -20,6 +20,15 @@ func (p *Pool) AddPod(name string, ip string) {
 	}
 	p.podNameIPMap[name] = ip
 	p.m.Unlock()
+}
+
+//FindPodIP gets pod ip by pod name
+func (p *Pool) FindPodIP(name string) (string, bool) {
+	p.m.RLock()
+	name, exists := p.podNameIPMap[name]
+	p.m.RUnlock()
+
+	return name, exists
 }
 
 // AddSession add pod to colelction

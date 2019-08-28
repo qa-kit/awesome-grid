@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 
 func TestReadConfig(t *testing.T) {
 	config := Config{}
-	err := config.Read("config/config.json")
+	err := config.Read("../config.json")
 	if err != nil {
 		t.Errorf("expected empty error instead '%s'", err.Error())
 	}

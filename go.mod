@@ -1,4 +1,4 @@
-module github.com/rsimkin/awesome-grid
+module github.com/qa-kit/awesome-grid
 
 go 1.12
 

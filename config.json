@@ -1,5 +1,5 @@
 {
-  "deployment_template_path": "config/deployment.json",
+  "deployment_template_path": "deployment.json",
   "wait_pod_timeout": 10,
   "pod_lifetime": 120,
   "listen": ":4444",

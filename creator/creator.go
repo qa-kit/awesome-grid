@@ -1,24 +1,38 @@
-package main
+package creator
 
 import (
 	"errors"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/qa-kit/awesome-grid/cleaner"
+	"github.com/qa-kit/awesome-grid/cluster"
+	"github.com/qa-kit/awesome-grid/config"
+	"github.com/qa-kit/awesome-grid/deploymentconfig"
+	poolPkg "github.com/qa-kit/awesome-grid/pool"
 )
 
 // Creator provides creating logic of pods
 type Creator struct {
-	config  *Config
-	cluster Cluster
-	pool    *Pool
-	cleaner *Cleaner
+	config  *config.Config
+	cluster cluster.Cluster
+	pool    *poolPkg.Pool
+	cleaner *cleaner.Cleaner
+}
+
+//New created new Creator
+func New(config *config.Config,
+	cluster cluster.Cluster,
+	pool *poolPkg.Pool,
+	cleaner *cleaner.Cleaner) *Creator {
+	return &Creator{config, cluster, pool, cleaner}
 }
 
 // Resolve creates new pod and resolve to it
 func (c *Creator) Resolve(request *http.Request) (string, error) {
 	// Creating config
-	deploymentConfig, err := DeploymentFromTemplate(c.config.DeploymentTemplate)
+	deploymentConfig, err := deploymentconfig.DeploymentFromTemplate(c.config.DeploymentTemplate)
 	if err != nil {
 		return "", errors.New("creating deployment, " + err.Error())
 	}

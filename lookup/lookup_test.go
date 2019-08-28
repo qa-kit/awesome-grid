@@ -1,8 +1,11 @@
-package main
+package lookup
 
 import (
 	"net/http"
 	"testing"
+
+	"github.com/qa-kit/awesome-grid/config"
+	poolPkg "github.com/qa-kit/awesome-grid/pool"
 )
 
 func TestResolve(t *testing.T) {
@@ -10,8 +13,8 @@ func TestResolve(t *testing.T) {
 		sessionID = "C20AD4D76FE97759AA27A0C99BFF6710"
 		host      = "127.0.0.1"
 		expected  = "http://127.0.0.1:4444"
-		pool      = &Pool{}
-		config    = &Config{PodPort: "4444"}
+		pool      = &poolPkg.Pool{}
+		config    = &config.Config{PodPort: "4444"}
 	)
 	lookup := Lookup{
 		pool:   pool,
