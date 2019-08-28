@@ -8,17 +8,17 @@ import (
 	"strings"
 
 	"github.com/qa-kit/awesome-grid/config"
-	poolpkg "github.com/qa-kit/awesome-grid/pool"
+	poolPkg "github.com/qa-kit/awesome-grid/pool"
 )
 
 // SessionGrabber struct
 type SessionGrabber struct {
-	pool   *poolpkg.Pool
+	pool   *poolPkg.Pool
 	config *config.Config
 }
 
 //New creates new SessionGrabber
-func New(pool *poolpkg.Pool, config *config.Config) SessionGrabber {
+func New(pool *poolPkg.Pool, config *config.Config) SessionGrabber {
 	return SessionGrabber{pool: pool, config: config}
 }
 
