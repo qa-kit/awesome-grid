@@ -1,4 +1,4 @@
-![Awesome grid logo](https://raw.githubusercontent.com/qa-kit/awesome-grid/master/assets/logo.png)
+![Awesome grid logo](https://raw.githubusercontent.com/qa-kit/awesome-grid/master/doc/assets/logo.png)
 
 # Awesome grid [![Build Status](https://travis-ci.org/qa-kit/awesome-grid.svg?branch=master)](https://travis-ci.org/qa-kit/awesome-grid.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/qa-kit/awesome-grid)](https://goreportcard.com/report/github.com/qa-kit/awesome-grid) [![codecov](https://codecov.io/gh/qa-kit/awesome-grid/branch/master/graph/badge.svg)](https://codecov.io/gh/qa-kit/awesome-grid)
 > Logo means nothing
