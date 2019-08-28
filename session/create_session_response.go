@@ -1,4 +1,4 @@
-package main
+package session
 
 // CreateSessionResponse provides response of web driver
 type CreateSessionResponse struct {

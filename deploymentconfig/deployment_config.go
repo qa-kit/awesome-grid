@@ -1,4 +1,4 @@
-package main
+package deploymentconfig
 
 import (
 	"encoding/json"

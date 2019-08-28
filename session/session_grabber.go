@@ -1,4 +1,4 @@
-package main
+package session
 
 import (
 	"encoding/json"
@@ -6,16 +6,24 @@ import (
 	"log"
 	"net/url"
 	"strings"
+
+	"github.com/qa-kit/awesome-grid/config"
+	poolpkg "github.com/qa-kit/awesome-grid/pool"
 )
 
 // SessionGrabber struct
 type SessionGrabber struct {
-	pool   *Pool
-	config *Config
+	pool   *poolpkg.Pool
+	config *config.Config
 }
 
-// RoundTrip processes reponses from web driver
-func (g *SessionGrabber) grab(host string, bodyBytes []byte) error {
+//New creates new SessionGrabber
+func New(pool *poolpkg.Pool, config *config.Config) SessionGrabber {
+	return SessionGrabber{pool: pool, config: config}
+}
+
+// Grab processes reponses from web driver
+func (g *SessionGrabber) Grab(host string, bodyBytes []byte) error {
 	webDriverResponse := CreateSessionResponse{}
 	if err := json.Unmarshal(bodyBytes, &webDriverResponse); err != nil {
 		return errors.New("parsing response, " + err.Error())

@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"encoding/json"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 )
 
 // Config struct stores config data for all app
@@ -25,10 +26,20 @@ func (c *Config) Read(path string) error {
 	if err != nil {
 		return errors.New("reading config " + path + ", " + err.Error())
 	}
+
 	err = json.Unmarshal(data, c)
 	if err != nil {
 		return errors.New("parsing config " + path + ", " + err.Error())
 	}
+
+	absolutePath, err := filepath.Abs(path)
+	if err != nil {
+		return errors.New("error in get absolute path")
+	}
+
+	parentDir := filepath.Dir(absolutePath)
+	c.DeploymentTemplatePath = parentDir + "/" + c.DeploymentTemplatePath
+
 	data, err = ioutil.ReadFile(c.DeploymentTemplatePath)
 	if err != nil {
 		return errors.New("reading deployment template " + c.DeploymentTemplatePath + ", " + err.Error())

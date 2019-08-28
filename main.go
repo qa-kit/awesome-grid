@@ -5,42 +5,38 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/qa-kit/awesome-grid/cleaner"
+	"github.com/qa-kit/awesome-grid/cluster"
+	configPkg "github.com/qa-kit/awesome-grid/config"
+	"github.com/qa-kit/awesome-grid/creator"
+	"github.com/qa-kit/awesome-grid/lookup"
+	poolPkg "github.com/qa-kit/awesome-grid/pool"
+	"github.com/qa-kit/awesome-grid/session"
 )
 
 const (
 	// ConfigPath path to config
-	ConfigPath = "config/config.json"
+	ConfigPath = "config.json"
 )
 
 func main() {
 	var (
 		r       = mux.NewRouter()
-		config  = &Config{}
-		pool    = &Pool{}
-		cluster = &Kubernetes{
-			config: config,
+		config  = &configPkg.Config{}
+		pool    = &poolPkg.Pool{}
+		cluster = &cluster.Kubernetes{
+			Config: config,
 		}
-		sessionGrabber = SessionGrabber{
-			pool:   pool,
-			config: config,
-		}
+		sessionGrabber    = session.New(pool, config)
 		newSessionHandler = &ProxyHandler{
-			resolver: &Creator{
-				config:  config,
-				cluster: cluster,
-				pool:    pool,
-				cleaner: &Cleaner{},
-			},
+			resolver: creator.New(config, cluster, pool, &cleaner.Cleaner{}),
 			transport: &Transport{
-				callback:  sessionGrabber.grab,
+				callback:  sessionGrabber.Grab,
 				roundTrip: http.DefaultTransport.RoundTrip,
 			},
 		}
 		existSessionHandler = &ProxyHandler{
-			resolver: Lookup{
-				pool:   pool,
-				config: config,
-			},
+			resolver: lookup.New(pool, config),
 		}
 	)
 

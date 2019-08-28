@@ -1,4 +1,6 @@
-package main
+package cluster
+
+import "github.com/qa-kit/awesome-grid/deploymentconfig"
 
 // FakeKubernetes is rub for k8s client
 type FakeKubernetes struct {
@@ -7,7 +9,7 @@ type FakeKubernetes struct {
 }
 
 // CreateDeployment creates deployment
-func (k FakeKubernetes) CreateDeployment(deploymentData DeploymentConfig) (name string, err error) {
+func (k FakeKubernetes) CreateDeployment(deploymentData deploymentconfig.DeploymentConfig) (name string, err error) {
 	return k.CreateDeploymentResult, nil
 }
 

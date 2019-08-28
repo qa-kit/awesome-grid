@@ -1,10 +1,12 @@
-package main
+package cluster
 
 import (
 	"errors"
 	"log"
 	"strings"
 
+	"github.com/qa-kit/awesome-grid/config"
+	"github.com/qa-kit/awesome-grid/deploymentconfig"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -15,7 +17,7 @@ import (
 // Kubernetes helps to access k8s cluster methods
 type Kubernetes struct {
 	client dynamic.Interface
-	config *Config
+	Config *config.Config
 }
 
 // CreateClient creayes k8s client
@@ -36,13 +38,13 @@ func (k *Kubernetes) CreateClient() error {
 }
 
 // CreateDeployment creates deployment
-func (k *Kubernetes) CreateDeployment(deploymentData DeploymentConfig) (name string, err error) {
+func (k *Kubernetes) CreateDeployment(deploymentData deploymentconfig.DeploymentConfig) (name string, err error) {
 	// Building a config
 	deploymentConfig := &unstructured.Unstructured{
 		Object: deploymentData,
 	}
 	deploymentRes := schema.GroupVersionResource{Group: "apps", Version: "v1", Resource: "deployments"}
-	result, err := k.client.Resource(deploymentRes).Namespace(k.config.Namespace).Create(deploymentConfig, metav1.CreateOptions{})
+	result, err := k.client.Resource(deploymentRes).Namespace(k.Config.Namespace).Create(deploymentConfig, metav1.CreateOptions{})
 	if err != nil {
 		return "", errors.New("creating k8s deployment, " + err.Error())
 	}
@@ -54,7 +56,7 @@ func (k *Kubernetes) CreateDeployment(deploymentData DeploymentConfig) (name str
 func (k *Kubernetes) FindPodIP(deploymentName string) (string, error) {
 	// List of pods
 	podRes := schema.GroupVersionResource{Version: "v1", Resource: "pods"}
-	list, err := k.client.Resource(podRes).Namespace(k.config.Namespace).List(metav1.ListOptions{})
+	list, err := k.client.Resource(podRes).Namespace(k.Config.Namespace).List(metav1.ListOptions{})
 	if err != nil {
 		return "", errors.New("listing k8s pods, " + err.Error())
 	}
@@ -82,7 +84,7 @@ func (k *Kubernetes) DeleteDeployment(deploymentName string) error {
 		PropagationPolicy: &deletePolicy,
 	}
 	deploymentRes := schema.GroupVersionResource{Group: "apps", Version: "v1", Resource: "deployments"}
-	if err := k.client.Resource(deploymentRes).Namespace(k.config.Namespace).Delete(deploymentName, deleteOptions); err != nil {
+	if err := k.client.Resource(deploymentRes).Namespace(k.Config.Namespace).Delete(deploymentName, deleteOptions); err != nil {
 		log.Println("deleting deployment " + deploymentName + " in k8s cluster, " + err.Error())
 	}
 

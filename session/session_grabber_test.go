@@ -1,25 +1,28 @@
-package main
+package session
 
 import (
 	"testing"
+
+	"github.com/qa-kit/awesome-grid/config"
+	poolPkg "github.com/qa-kit/awesome-grid/pool"
 )
 
 func TestGrabSuccess(t *testing.T) {
 	var (
 		host     = "127.0.0.1"
 		response = []byte("{\"sessionId\":\"id\"}")
-		pool     = &Pool{}
-		config   = &Config{PodPort: "4444"}
+		pool     = &poolPkg.Pool{}
+		config   = &config.Config{PodPort: "4444"}
 	)
 	grabber := SessionGrabber{
 		pool:   pool,
 		config: config,
 	}
-	err := grabber.grab(host, response)
+	err := grabber.Grab(host, response)
 	if err != nil {
 		t.Errorf("expected empty error instead %s", err.Error())
 	}
-	found, exists := pool.sessionIDPodIP["id"]
+	found, exists := pool.IP("id")
 	if found != host {
 		t.Errorf("expected found '%s' instead '%s'", found, host)
 	}
@@ -33,12 +36,12 @@ func TestGrabFailParseResponse(t *testing.T) {
 		host         = "http://127.0.0.1"
 		errorMessage = "parsing response, unexpected end of JSON input"
 		response     = []byte("")
-		pool         = &Pool{}
+		pool         = &poolPkg.Pool{}
 	)
 	grabber := SessionGrabber{
 		pool: pool,
 	}
-	err := grabber.grab(host, response)
+	err := grabber.Grab(host, response)
 	if err == nil {
 		t.Errorf("expected error")
 		return
