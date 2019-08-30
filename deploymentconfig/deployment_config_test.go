@@ -17,3 +17,10 @@ func TestDeploymentFromTemplate(t *testing.T) {
 		t.Errorf("expected found '%s' instead %s", found, "b")
 	}
 }
+
+func TestDeploymentFromTemplateFail(t *testing.T) {
+	_, err := DeploymentFromTemplate("{")
+	if err == nil {
+		t.Errorf("expected error")
+	}
+}
