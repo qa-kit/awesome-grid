@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,6 +11,7 @@ import (
 	"github.com/qa-kit/awesome-grid/lookup"
 	poolPkg "github.com/qa-kit/awesome-grid/pool"
 	"github.com/qa-kit/awesome-grid/session"
+	logger "github.com/sirupsen/logrus"
 )
 
 const (
@@ -20,6 +20,11 @@ const (
 )
 
 func main() {
+
+	logger.SetFormatter(&logger.TextFormatter{
+		FullTimestamp: true,
+	})
+
 	var (
 		r       = mux.NewRouter()
 		config  = &configPkg.Config{}
@@ -49,15 +54,15 @@ func main() {
 
 	// Reading configs
 	if err := config.Read(ConfigPath); err != nil {
-		log.Fatal(err.Error())
+		logger.Fatal(err.Error())
 	}
 
 	// Creating clients
 	if err := cluster.CreateClient(); err != nil {
-		log.Fatal(err.Error())
+		logger.Fatal(err.Error())
 	}
 
 	if err := http.ListenAndServe(config.Listen, nil); err != nil {
-		log.Fatal(err.Error())
+		logger.Fatal(err.Error())
 	}
 }

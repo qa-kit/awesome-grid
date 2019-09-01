@@ -2,7 +2,6 @@ package creator
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"time"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/qa-kit/awesome-grid/config"
 	"github.com/qa-kit/awesome-grid/deploymentconfig"
 	poolPkg "github.com/qa-kit/awesome-grid/pool"
+	logger "github.com/sirupsen/logrus"
 )
 
 // Creator provides creating logic of pods
@@ -38,12 +38,12 @@ func (c *Creator) Resolve(request *http.Request) (string, error) {
 	}
 
 	// Creating deployemnt
-	log.Println("creating new deployment in k8s")
+	logger.Info("creating new deployment in k8s")
 	name, err := c.cluster.CreateDeployment(deploymentConfig)
 	if err != nil {
 		return "", errors.New("creating deployment, " + err.Error())
 	}
-	log.Println("deployment " + name + " created")
+	logger.Infof("deployment %s created", name)
 
 	// Delayed removing
 	go c.cleaner.DeleteDeployment(name, c.cluster, c.config.PodLifetime, c.pool)
@@ -55,7 +55,7 @@ func (c *Creator) Resolve(request *http.Request) (string, error) {
 		return "", errors.New("finding pod ip, " + err.Error())
 	}
 
-	log.Println("deployment " + name + " ip is " + IP)
+	logger.Infof("deployment %s ip is %s", name, IP)
 
 	// Addind to pool
 	c.pool.AddPod(name, IP)
