@@ -7,11 +7,13 @@ require (
 	github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d
 	github.com/golang/protobuf v1.2.0
 	github.com/google/gofuzz v1.0.0
+	github.com/google/logger v1.0.1
 	github.com/gorilla/mux v1.7.3
 	github.com/imdario/mergo v0.3.5
 	github.com/json-iterator/go v1.1.7
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 	github.com/modern-go/reflect2 v1.0.1
+	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/pflag v1.0.3
 	golang.org/x/crypto v0.0.0-20181025213731-e84da0312774
 	golang.org/x/net v0.0.0-20190812203447-cdfb69ac37fc

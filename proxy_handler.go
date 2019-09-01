@@ -2,10 +2,11 @@ package main
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // ProxyHandler is flexible proxy handler
@@ -16,14 +17,14 @@ type ProxyHandler struct {
 
 // Handle process request url
 func (h *ProxyHandler) Handle(res http.ResponseWriter, request *http.Request) {
-	log.Println("processing incoming request " + request.URL.Path)
+	logger.Infof("processing incoming request %s", request.URL.Path)
 	path, err := h.resolver.Resolve(request)
 	if err != nil {
 		h.HandleError(res, err)
 		return
 	}
 
-	log.Println("proxing " + request.URL.Path + " to " + path)
+	logger.Infof("proxing %s to %s", request.URL.Path, path)
 	var target *url.URL
 	target, err = url.Parse(path)
 	if err != nil {
@@ -39,7 +40,7 @@ func (h *ProxyHandler) Handle(res http.ResponseWriter, request *http.Request) {
 	request.URL.Scheme = target.Scheme
 	request.Host = target.Host
 
-	log.Println("proxing detail: " + request.Method + " " + request.URL.Scheme + " " + request.Host + request.URL.Path)
+	logger.Infof("proxing detail: %s %s %s%s", request.Method, request.URL.Scheme, request.Host, request.URL.Path)
 	proxy.ServeHTTP(res, request)
 }
 

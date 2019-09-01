@@ -3,10 +3,10 @@ package config
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"path/filepath"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // Config struct stores config data for all app
@@ -46,12 +46,11 @@ func (c *Config) Read(path string) error {
 	}
 	c.DeploymentTemplate = string(data)
 	//TODO validate
-	log.Print(
-		fmt.Sprintf("config listing\n"),
-		fmt.Sprintf("deployment template path: %s\n", c.DeploymentTemplatePath),
-		fmt.Sprintf("wait for creating timeout: %d\n", c.WaitForCreatingTimeout),
-		fmt.Sprintf("pod lifetime %d\n", c.PodLifetime),
-		fmt.Sprintf("listen: %s\n", c.Listen),
-		fmt.Sprintf("namespace: %s\n", c.Namespace))
+	logger.Infof("config listing\n")
+	logger.Infof("deployment template path: %s\n", c.DeploymentTemplatePath)
+	logger.Infof("wait for creating timeout: %d\n", c.WaitForCreatingTimeout)
+	logger.Infof("pod lifetime %d\n", c.PodLifetime)
+	logger.Infof("listen: %s\n", c.Listen)
+	logger.Infof("namespace: %s\n", c.Namespace)
 	return nil
 }

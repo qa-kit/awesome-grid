@@ -3,12 +3,12 @@ package session
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/url"
 	"strings"
 
 	"github.com/qa-kit/awesome-grid/config"
 	poolPkg "github.com/qa-kit/awesome-grid/pool"
+	logger "github.com/sirupsen/logrus"
 )
 
 // SessionGrabber struct
@@ -35,7 +35,7 @@ func (g *SessionGrabber) Grab(host string, bodyBytes []byte) error {
 	}
 	// Removing port from host
 	host = strings.ReplaceAll(url.Host, ":"+g.config.PodPort, "")
-	log.Println("new session " + webDriverResponse.SessionID + " bind with " + host)
+	logger.Infof("new session %s bind with %s", webDriverResponse.SessionID, host)
 	g.pool.AddSession(webDriverResponse.SessionID, host)
 
 	return nil

@@ -2,7 +2,6 @@ package cluster
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/qa-kit/awesome-grid/config"
@@ -12,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
+	logger "github.com/sirupsen/logrus"
 )
 
 // Kubernetes helps to access k8s cluster methods
@@ -85,7 +85,7 @@ func (k *Kubernetes) DeleteDeployment(deploymentName string) error {
 	}
 	deploymentRes := schema.GroupVersionResource{Group: "apps", Version: "v1", Resource: "deployments"}
 	if err := k.client.Resource(deploymentRes).Namespace(k.Config.Namespace).Delete(deploymentName, deleteOptions); err != nil {
-		log.Println("deleting deployment " + deploymentName + " in k8s cluster, " + err.Error())
+		logger.Errorf("deleting deployment %s  in k8s cluster, %s", deploymentName, err.Error())
 	}
 
 	return nil
