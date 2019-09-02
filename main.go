@@ -48,7 +48,7 @@ func main() {
 	// New session handler
 	r.HandleFunc("/wd/hub/session", newSessionHandler.Handle).Methods("POST")
 
-	// Existing session handlerƒ
+	// Existing session handler
 	r.PathPrefix("/").Handler(http.HandlerFunc(existSessionHandler.Handle))
 	http.Handle("/", r)
 
