@@ -16,9 +16,11 @@ type Cleaner struct {
 func (c *Cleaner) DeleteDeployment(deploymentName string, cluster cluster.Cluster, sleep int, pool *pool.Pool) {
 	time.Sleep(time.Duration(sleep) * 1000 * time.Millisecond)
 	err := cluster.DeleteDeployment(deploymentName)
+
 	if err == nil {
 		logger.Infof("%s removed", deploymentName)
 	}
+
 	if !pool.Delete(deploymentName) {
 		logger.Infof("deployment %s not presented in local pool", deploymentName)
 	}

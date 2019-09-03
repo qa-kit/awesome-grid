@@ -26,6 +26,7 @@ func New(config *config.Config,
 	cluster cluster.Cluster,
 	pool *poolPkg.Pool,
 	cleaner *cleaner.Cleaner) *Creator {
+
 	return &Creator{config, cluster, pool, cleaner}
 }
 
