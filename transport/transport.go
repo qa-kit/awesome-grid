@@ -13,6 +13,7 @@ type Transport struct {
 	roundTrip func(request *http.Request) (*http.Response, error)
 }
 
+//New creates new transport
 func New(
 	callback func(host string, bodyBytes []byte) error,
 	roundTrip func(request *http.Request) (*http.Response, error),
