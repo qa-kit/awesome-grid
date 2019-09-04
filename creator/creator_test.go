@@ -24,6 +24,9 @@ func TestCreatorResolve(t *testing.T) {
 		},
 		pool:    &pool.Pool{},
 		cleaner: &cleaner.Cleaner{},
+		healthcheck: func(string) (*http.Response, error) {
+			return &http.Response{}, nil
+		},
 	}
 	request, err := http.NewRequest("GET", "/", nil)
 	if err != nil {

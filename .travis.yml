@@ -7,8 +7,13 @@ go:
 env:
   - GO111MODULE=on
 
-script:
-  - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+jobs:
+  include:
+    - stage: "Tests"
+      script:
+      - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
+      after_success:
+      - bash <(curl -s https://codecov.io/bash)
+    - stage: "Build"
+      script:
+      - docker build -t travis-ci-build-stages-demo .

@@ -26,7 +26,7 @@ func New(pool *poolPkg.Pool, config *config.Config) Lookup {
 
 // Resolve finds ip of pod by session id, specified in request
 func (l Lookup) Resolve(request *http.Request) (string, error) {
-	logger.Info("processing with existing session")
+	logger.Debug("processing with existing session")
 	path := request.URL.Path
 	sessionID := strings.ReplaceAll(path, "/wd/hub/session/", "")
 	if len(sessionID) < SessionLength {

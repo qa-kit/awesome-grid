@@ -37,7 +37,7 @@ func main() {
 		sessionGrabber = session.New(pool, config)
 
 		newSessionHandler = proxyhandler.New(
-			creator.New(config, cluster, pool, &cleaner.Cleaner{}),
+			creator.New(config, cluster, pool, &cleaner.Cleaner{}, http.Get),
 			transport.New(sessionGrabber.Grab, http.DefaultTransport.RoundTrip),
 		)
 
@@ -48,7 +48,7 @@ func main() {
 	)
 
 	// New session handler
-	r.PathPrefix("/wd/hub/session").Methods("POST").Handler(http.HandlerFunc(newSessionHandler.Handle))
+	r.HandleFunc("/wd/hub/session", newSessionHandler.Handle)
 	// Existing session handler
 	r.PathPrefix("/").Handler(http.HandlerFunc(existSessionHandler.Handle))
 
