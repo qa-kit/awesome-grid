@@ -33,6 +33,7 @@ func (g *SessionGrabber) Grab(host string, bodyBytes []byte) error {
 	if err != nil {
 		return errors.New("parsing " + host + ", " + err.Error())
 	}
+
 	// Removing port from host
 	host = strings.ReplaceAll(url.Host, ":"+g.config.PodPort, "")
 	logger.Infof("new session %s bind with %s", webDriverResponse.SessionID, host)

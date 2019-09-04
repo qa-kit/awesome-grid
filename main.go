@@ -10,7 +10,9 @@ import (
 	"github.com/qa-kit/awesome-grid/creator"
 	"github.com/qa-kit/awesome-grid/lookup"
 	poolPkg "github.com/qa-kit/awesome-grid/pool"
+	"github.com/qa-kit/awesome-grid/proxyhandler"
 	"github.com/qa-kit/awesome-grid/session"
+	"github.com/qa-kit/awesome-grid/transport"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -32,24 +34,24 @@ func main() {
 		cluster = &cluster.Kubernetes{
 			Config: config,
 		}
-		sessionGrabber    = session.New(pool, config)
-		newSessionHandler = &ProxyHandler{
-			resolver: creator.New(config, cluster, pool, &cleaner.Cleaner{}),
-			transport: &Transport{
-				callback:  sessionGrabber.Grab,
-				roundTrip: http.DefaultTransport.RoundTrip,
-			},
-		}
-		existSessionHandler = &ProxyHandler{
-			resolver: lookup.New(pool, config),
-		}
+		sessionGrabber = session.New(pool, config)
+
+		newSessionHandler = proxyhandler.New(
+			creator.New(config, cluster, pool, &cleaner.Cleaner{}),
+			transport.New(sessionGrabber.Grab, http.DefaultTransport.RoundTrip),
+		)
+
+		existSessionHandler = proxyhandler.New(
+			lookup.New(pool, config),
+			nil,
+		)
 	)
 
 	// New session handler
-	r.HandleFunc("/wd/hub/session", newSessionHandler.Handle).Methods("POST")
-
+	r.PathPrefix("/wd/hub/session").Methods("POST").Handler(http.HandlerFunc(newSessionHandler.Handle))
 	// Existing session handler
 	r.PathPrefix("/").Handler(http.HandlerFunc(existSessionHandler.Handle))
+
 	http.Handle("/", r)
 
 	// Reading configs

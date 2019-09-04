@@ -19,9 +19,11 @@ func DeploymentFromTemplate(template string) (d DeploymentConfig, err error) {
 	patterns := map[string]string{
 		"%UNIQUE_ID%": strconv.Itoa(rand.Int()),
 	}
+
 	for key, value := range patterns {
 		template = strings.ReplaceAll(template, key, value)
 	}
+
 	err = json.Unmarshal([]byte(template), &d)
 	if err != nil {
 		return nil, errors.New("processing deployment template, " + err.Error())

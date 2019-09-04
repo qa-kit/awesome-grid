@@ -1,4 +1,4 @@
-package main
+package proxyhandler
 
 import "net/http"
 

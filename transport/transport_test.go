@@ -1,4 +1,4 @@
-package main
+package transport
 
 import (
 	"bytes"
@@ -13,18 +13,20 @@ func TestRoundTrip(t *testing.T) {
 		response      = "response"
 		catchResponse = ""
 	)
-	transport := Transport{
-		callback: func(host string, bodyBytes []byte) error {
+
+	transport := New(
+		func(host string, bodyBytes []byte) error {
 			catchResponse = string(bodyBytes)
 			return nil
 		},
-		roundTrip: func(request *http.Request) (*http.Response, error) {
+		func(request *http.Request) (*http.Response, error) {
 			response := &http.Response{
 				Body: ioutil.NopCloser(bytes.NewBufferString(response)),
 			}
 			return response, nil
 		},
-	}
+	)
+
 	request, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
 		t.Errorf("creating http request error %s", err.Error())

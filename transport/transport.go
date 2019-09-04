@@ -1,4 +1,4 @@
-package main
+package transport
 
 import (
 	"bytes"
@@ -11,6 +11,14 @@ import (
 type Transport struct {
 	callback  func(host string, bodyBytes []byte) error
 	roundTrip func(request *http.Request) (*http.Response, error)
+}
+
+//New creates new transport
+func New(
+	callback func(host string, bodyBytes []byte) error,
+	roundTrip func(request *http.Request) (*http.Response, error),
+) *Transport {
+	return &Transport{callback, roundTrip}
 }
 
 // RoundTrip processes reponses from web driver

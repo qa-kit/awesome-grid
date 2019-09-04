@@ -1,4 +1,4 @@
-package main
+package proxyhandler
 
 import (
 	"errors"
@@ -6,13 +6,19 @@ import (
 	"net/http/httputil"
 	"net/url"
 
+	"github.com/qa-kit/awesome-grid/transport"
 	logger "github.com/sirupsen/logrus"
 )
 
 // ProxyHandler is flexible proxy handler
 type ProxyHandler struct {
 	resolver  Resolver
-	transport *Transport
+	transport *transport.Transport
+}
+
+//New creates new ProxyHandler
+func New(resolver Resolver, transport *transport.Transport) *ProxyHandler {
+	return &ProxyHandler{resolver, transport}
 }
 
 // Handle process request url
