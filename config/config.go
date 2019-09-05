@@ -46,11 +46,11 @@ func (c *Config) Read(path string) error {
 	}
 	c.DeploymentTemplate = string(data)
 	//TODO validate
-	logger.Infof("config listing\n")
-	logger.Infof("deployment template path: %s\n", c.DeploymentTemplatePath)
-	logger.Infof("wait for creating timeout: %d\n", c.WaitForCreatingTimeout)
-	logger.Infof("pod lifetime %d\n", c.PodLifetime)
-	logger.Infof("listen: %s\n", c.Listen)
-	logger.Infof("namespace: %s\n", c.Namespace)
+	logger.Infof("config listing")
+	logger.Infof("deployment template path: %s", c.DeploymentTemplatePath)
+	logger.Infof("wait for creating timeout: %d", c.WaitForCreatingTimeout)
+	logger.Infof("pod lifetime %d", c.PodLifetime)
+	logger.Infof("listen: %s", c.Listen)
+	logger.Infof("namespace: %s", c.Namespace)
 	return nil
 }
