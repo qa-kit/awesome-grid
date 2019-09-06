@@ -1,19 +1,58 @@
 language: go
 
+sudo: required
+
+dist: xenial
+
 go:
   - 1.12.8
-  - master
 
 env:
-  - GO111MODULE=on
+  global:
+    - GO111MODULE=on
+    - CHANGE_MINIKUBE_NONE_USER=true
+    - MINIKUBE_WANTUPDATENOTIFICATION=false
+    - MINIKUBE_WANTREPORTERRORPROMPT=false
+    - MINIKUBE_HOME=$HOME
+    - CHANGE_MINIKUBE_NONE_USER=true
+    - KUBECONFIG=$HOME/.kube/config
 
 jobs:
   include:
-    - stage: "Tests"
+    - stage: "Unit test"
       script:
       - go test ./... -race -coverprofile=coverage.txt -covermode=atomic
       after_success:
       - bash <(curl -s https://codecov.io/bash)
-    - stage: "Build"
+    - stage: "E2E test"
+      before_script:
+        # Download kubectl, which is a requirement for using minikube.
+        - curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
+        # Download minikube.
+        - curl -Lo minikube https://storage.googleapis.com/minikube/releases/v1.2.0/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+        - mkdir -p $HOME/.kube $HOME/.minikube
+        - touch $KUBECONFIG
+        - sudo minikube start --vm-driver=none --kubernetes-version=v1.15.0
+        - "sudo chown -R travis: /home/travis/.minikube/"
       script:
-      - docker build -t travis-ci-build-stages-demo .
+        # Following is just to demo that the kubernetes cluster works.
+        - kubectl cluster-info
+        # Verify kube-addon-manager.
+        # kube-addon-manager is responsible for managing other kubernetes components, such as kube-dns, dashboard, storage-provisioner..
+        - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lcomponent=kube-addon-manager -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-addon-manager to be available"; kubectl get pods --all-namespaces; done
+        # Wait for kube-dns to be ready.
+        - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n kube-system get pods -lk8s-app=kube-dns -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for kube-dns to be available"; kubectl get pods --all-namespaces; done
+        # Setup cluster
+        - kubectl apply -f build/kube
+        # Build image
+        - eval $(minikube docker-env)
+        - docker build . -t awesome-grid
+        # Run app in Minikube
+        - kubectl run awesome-grid --image=awesome-grid --labels="app=awesome-grid" --image-pull-policy=Never --port 4444
+        - kubectl get pods
+        # Make sure created pod is scheduled and running.
+        - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n default get pods -lapp=awesome-grid -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for awesome-grid deployment to be available"; kubectl get pods -n default; done
+        - kubectl expose deployment awesome-grid --type=NodePort
+        - kubectl get services
+        - url=$(minikube service awesome-grid --url)
+        - curl -X POST $url/wd/hub/session -d '{"desiredCapabilities":{"browserName":"chrome"}}'

@@ -3,6 +3,6 @@
   "wait_pod_timeout": 10,
   "pod_lifetime": 120,
   "listen": ":4444",
-  "namespace": "testing",
+  "namespace": "default",
   "pod_port": "4444"
 }
