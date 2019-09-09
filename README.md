@@ -44,6 +44,16 @@ For every test tool will create unique pod and after test finished pod will be r
 * Complete end-to-end tests provide stability of current release
 * Opportunity of tuning selenium images for best performance.
 
+## Contributing
+If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
+
+We try to follow and hope you will too:
+* Codestyle by `gofmt`
+* Effective go https://golang.org/doc/effective_go.html
+* Best practice of project layout https://github.com/golang-standards/project-layout
+* Use codecov https://codecov.io/gh/qa-kit/awesome-grid
+* Travis-ci tests and builds https://travis-ci.com/qa-kit/awesome-grid/
+
 ## Links
 
 - Repository: https://github.com/qa-kit/awesome-grid/
