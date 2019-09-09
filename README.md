@@ -11,7 +11,7 @@ For every test tool will create unique pod and after test finished pod will be r
 * Install minikube https://kubernetes.io/docs/tasks/tools/install-minikube/
 * Start minikube
 
-  `minikune start`
+  `minikube start`
 * Clone source
 
   `git clone git@github.com:qa-kit/awesome-grid.git`
