@@ -37,6 +37,16 @@ For every test tool will create unique pod and after test finished pod will be r
   `minikube service awesome-grid --url`
 * Start tests with this url.
 
+## Building
+Building a docker image and
+```
+docker build . -t registry.exmaple.com/awesome-grid
+```
+After that you could push image to your private registry and use it in k8s cluster
+```
+docker push registry.exmaple.com/awesome-grid
+```
+
 ## Features
 * Flexible JSON-config for grid
 * JSON template for deployment template for k8s
