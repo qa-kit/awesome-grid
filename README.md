@@ -37,6 +37,13 @@ For every test tool will create unique pod and after test finished pod will be r
   `minikube service awesome-grid --url`
 * Start tests with this url.
 
+## Features
+* Flexible JSON-config for grid
+* JSON template for deployment template for k8s
+* On-demand grid scaling
+* Complete end-to-end tests provide stability of current release
+* Opportunity of tuning selenium images for best performance.
+
 ## Links
 
 - Repository: https://github.com/qa-kit/awesome-grid/
