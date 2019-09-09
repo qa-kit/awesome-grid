@@ -54,5 +54,5 @@ jobs:
         - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl -n default get pods -lapp=awesome-grid -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1;echo "waiting for awesome-grid deployment to be available"; kubectl get pods -n default; done
         - kubectl expose deployment awesome-grid --type=NodePort
         - kubectl get services
-        - url=$(minikube service awesome-grid --url)
-        - curl -X POST $url/wd/hub/session -d '{"desiredCapabilities":{"browserName":"chrome"}}'
+        - chmod +x ./build/test.bash
+        - ./build/test.bash
