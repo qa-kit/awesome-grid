@@ -49,6 +49,11 @@ func main() {
 
 	// New session handler
 	r.HandleFunc("/wd/hub/session", newSessionHandler.Handle)
+	// Healthcheck
+	r.HandleFunc("/status/", func(res http.ResponseWriter, request *http.Request) {
+		res.Header().Set("Content-Type", "application/json")
+		res.Write([]byte("{\"status\":\"ok\"}"))
+	})
 	// Existing session handler
 	r.PathPrefix("/").Handler(http.HandlerFunc(existSessionHandler.Handle))
 
